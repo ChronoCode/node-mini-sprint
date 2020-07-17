@@ -12,11 +12,11 @@ const port = 3000;
 
 // TODO: Fill with strings of your favorite quotes :)
 const quotes = [
-  'one',
-  'two',
-  'three',
-  'four',
-  'five'
+  'Experience is the name everyone gives to their mistakes. -- Oscar Wilde',
+  'Knowledge is power. -- Francis Bacon',
+  'Fix the cause, not the symptom. -- Steve Maguire',
+  'Before software can be reusable it first has to be usable. -- Ralph Johnson',
+  'A person is smart. People are dumb, panicky dangerous animals... -- Agent K, Men In Black'
 ];
 
 //Utility Function to return a random integer
@@ -37,18 +37,37 @@ const handleRequest = function(req, res) {
   }
 
   // TODO: GET ONE
-  if ((req.url == '/quote/' || req.url == '/quote') && req.method == "FILL ME IN") {
-    //YOUR CODE HERE
+  if ((req.url == '/quote/' || req.url == '/quote') && req.method == "GET") {
+    let quote = quotes[getRandomInt(0, quotes.length)];
+    res.writeHead(200, headers);
+    res.write(quote);
+    res.end();
+
+  }
+  // TODO: GET All Quotes
+  else if ((req.url == '/quotes/' || req.url == '/quotes') && req.method == "GET") {
+    res.writeHead(200, headers);
+    res.write(JSON.stringify(quotes));
+    res.end();
 
   }
   // TODO: POST/CREATE
-  else if ((req.url == 'FILL ME IN' || req.url == 'FILL ME IN') && req.method == "FILL ME IN") {
-    //YOUR CODE HERE
+  else if ((req.url == '/quote/' || req.url == '/quote') && req.method == "POST") {
+    let body = '';
+    req.on('data', (chunk) => {
+        body += chunk;
+    });
+    req.on('end', () => {
+        quotes.push(body);
+        res.writeHead(200, headers);
+        res.write(body);
+        res.end();
+    });
   }
 
 //CATCH ALL ROUTE
   else {
-    res.writeHead(404,headers);
+    res.writeHead(404, headers);
     res.end('Page not found');
 
   }
